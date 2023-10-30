@@ -166,6 +166,13 @@ minikube tunnel # opens up all ingresses to our OS
 add docker
 https://github.com/RubenWerdmuller/docker-workshop
 
+
+https://betterstack.com/community/questions/how-to-use-local-docker-images-with-minikube/
+
+```
+minikube image load my-image
+```
+
 ```zsh
 # Set docker env
 eval $(minikube docker-env)             # Unix shells
