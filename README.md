@@ -57,29 +57,29 @@ k9s
 
 Let's do a small experiment and run a webserver with front-end page.
 
-To switch tabs, use `shift :` and type out your tab, for example, `pods`.
-
-**Nginx**
+> To switch tabs in k9s, use `shift :` and type out your tab, for example, `pods`.
 
 Go to k9s tab `deployments`.
 
 First up is creating a deployment using a [Nginx image](https://hub.docker.com/r/nginxdemos/hello):
 
-> If no registry is mentioned as flag, Docker Hub is used as registry. That's why we can instantly call `nginxdemos/hello` as image
+> If no Docker registry (read: place where you get your Docker images) from is mentioned in the kubectl CLI command, Docker Hub is automatically used as registry. That's why we can instantly call `nginxdemos/hello` as image
 
 ```
 kubectl create deployment web --image=nginxdemos/hello
 ```
 
-Now let's use k9s to debug and see if it's running
+Now let's use k9s to debug and see if it's running.
 
-Go to the tab `pods` and port-forward our application using `shift-f`. The Nginx demo is using port 80, but we can't forward that. We can however set port 80 for the container port and something we want to use for our `localhost`.
+- Go to the tab `pods`
+- Port-forward our application using `shift-f`
+- The Nginx demo is using port 80, but we can't forward that. We can however set port 80 for the container port and something we want to use for our `localhost`.
 
 Open the demo up in your [browser](localhost:3000)!
 
 ### Ingress
 
-<! -- Volg de ingress setup voor minikube
+<!-- Volg de ingress setup voor minikube
 https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
 -->
 
