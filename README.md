@@ -91,13 +91,15 @@ k9s
 
 Let's do a small experiment and run a webserver with front-end page.
 
-To switch tabs, use `shift :`.
+To switch tabs, use `shift :` and type out your tab.
 
 **Nginx**
 
 Go to k9s tab `deployments`.
 
-First up is creating a deployment:
+First up is creating a deployment using a [Nginx image](https://hub.docker.com/r/nginxdemos/hello):
+
+> If no registry is mentioned as flag, Docker Hub is used as registry. That's why we can instantly call `nginxdemos/hello` as image
 
 ```
 kubectl create deployment web --image=nginxdemos/hello
