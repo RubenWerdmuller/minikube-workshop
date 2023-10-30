@@ -9,7 +9,7 @@ Presentatie:
 
 ![k8s](https://kubernetes.io/images/kubernetes-horizontal-color.png)
 
-# minikube-workshop
+# First commit!
 
 What will we be doing?
 
