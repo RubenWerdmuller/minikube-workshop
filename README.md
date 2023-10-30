@@ -46,7 +46,7 @@ k9s
 
 Let's do a small experiment and run a webserver with front-end page.
 
-To switch tabs, use `shift :` and type out your tab.
+To switch tabs, use `shift :` and type out your tab, for example, `pods`.
 
 **Nginx**
 
