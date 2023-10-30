@@ -113,34 +113,26 @@ Next we'll use a debug feature called `expose` to see if we can access our deplo
 kubectl expose deployment web --type=NodePort --port=80
 ```
 
-# wil ik echt expose gebruiken en waarom werkt port-forward van k9s niet?
+Now let's use k9s to debug and see if it's running
 
-### testen 
+Go to the tab `pods` and port-forward our application using `shift-f`. The Nginx demo is using port 80, but we can't forward that. We can however set port 80 for the container port and something we want to use for our `localhost`.
 
-draait die
+Open the demo up in your [browser](localhost:3000)!
 
-```
-kubectl get service web
-```
+### Ingress
 
-Using Minikube
-
-```sh
-minikube service web --url
-```
-
-
-### ingress
-
-Volg de ingress setup voor minikube
+<! -- Volg de ingress setup voor minikube
 https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
+-->
+
+Alright! Now generally you'll want to use Ingresses (loadbalancers/proxies) to act as gateway between a client and our Kubernetes. Let's spin these suckers up.
 
 ```zsh
 minikube addons enable ingress
 minikube addons enable ingress-dns
 ```
 
-we maken een eigen 
+We'll add our first custom kubernetes configuration!
 
 ```sh
 cat <<EOF | kubectl apply -f 
@@ -166,7 +158,7 @@ EOF
 ```
 
 ```zsh
-minkube tunnel # opent alle ingresses voor ons
+minikube tunnel # opens up all ingresses to our OS
 ```
 
 ### 3. een eigen Docker image maken en draaien
