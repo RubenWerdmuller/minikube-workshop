@@ -60,14 +60,6 @@ First up is creating a deployment using a [Nginx image](https://hub.docker.com/r
 kubectl create deployment web --image=nginxdemos/hello
 ```
 
-Go to k9s tab `services`.
-
-Next we'll use a debug feature called `expose` to see if we can access our deployment.
-
-```
-kubectl expose deployment web --type=NodePort --port=80
-```
-
 Now let's use k9s to debug and see if it's running
 
 Go to the tab `pods` and port-forward our application using `shift-f`. The Nginx demo is using port 80, but we can't forward that. We can however set port 80 for the container port and something we want to use for our `localhost`.
