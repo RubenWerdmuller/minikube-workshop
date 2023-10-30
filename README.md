@@ -1,6 +1,7 @@
 Presentatie:
 
-- fireship https://www.youtube.com/watch?v=PziYflu8cB8
+- fireship k8s https://www.youtube.com/watch?v=PziYflu8cB8
+- fireship docker https://www.youtube.com/watch?v=Gjnup-PuquQ
 - kort resume over de presentatie
   - CaC Config as Code
     - yaml bestanden
