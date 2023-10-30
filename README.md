@@ -12,6 +12,7 @@ What will we be doing?
 To run everything we'll want:
 
 - Docker Desktop
+- An account with DockerHub
 - Minikube
 - kubectl CLI
 - VSC
