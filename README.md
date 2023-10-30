@@ -1,3 +1,14 @@
+Presentatie:
+
+- fireship https://www.youtube.com/watch?v=PziYflu8cB8
+- kort resume over de presentatie
+  - CaC Config as Code
+    - yaml bestanden
+  - k8s is self healing
+- Kubernetes is VET moeilijk, maar hey. Ik heb een crash-crash-crash-course bedacht die je er mee kan laten werken, zonder dat je ALLES hoeft te begrijpen en je kan hiermee voortaan kleine stukjes kennis gaan toevoegen.
+
+![k8s](https://kubernetes.io/images/kubernetes-horizontal-color.png)
+
 # minikube-workshop
 
 What will we be doing?
