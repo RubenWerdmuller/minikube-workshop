@@ -41,7 +41,7 @@ Install [Minikube](https://minikube.sigs.k8s.io/docs/start/)
 minikube start
 ```
 
-> your kubectl CLI can be used to indicate what kubernetes context (read: environment) your are working with. After starting `minikube`, it will set the context for you automatically.
+> your kubectl CLI can be used to indicate what kubernetes context (read: environment) you are working with. After starting `minikube`, it will set the context for you automatically.
 
 ### Seeing everything in action
 
