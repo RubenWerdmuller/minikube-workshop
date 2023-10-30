@@ -9,9 +9,7 @@ Presentatie:
 
 ![k8s](https://kubernetes.io/images/kubernetes-horizontal-color.png)
 
-# What is our mission
-
-What will we be doing?
+# What will we be doing?
 
 1. We'll kickstart Minikube and test it out a bit
 2. We'll be creating a front-end and API that can talk to each other 🗣⋆.ೃ࿔*
