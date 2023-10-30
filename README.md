@@ -1,16 +1,85 @@
 # minikube-workshop
 
-https://github.com/neefrehman/manyworlds
+What will we be doing?
+
+1. We'll be creating a front-end and API that can talk to each other 🗣⋆.ೃ࿔*
+2. We'll kickstart Minikube and test it out a bit
+3. We'll containerize the API and see if we can reach the API using Minikube
+4. And last but not least, we'll attempt giving the front-end up in Minikube
+
+## 1. Prerequisites
+
+We'll start out by creating the applications and create working `Docker images` for these.
+
+To run everything we'll want:
+
+- Docker Desktop
+- Minikube
+- kubectl CLI
+- VSC
+
+Useful snippets:
 
 ```zsh
-git remote set-url origin git@github.com:RubenWerdmuller/minikube-workshop.git
+git remote set-url origin git@github.com:your-repo.git
 ```
+
+### The API
+
+Create your directories.
+
+```sh
+k8s-workshop/
+├- front-end/
+└─ api/
+   └─ index.js
+```
+
+```zsh
+npm init
+npm i koa
+```
+
+```js
+const Koa = require('koa');
+const app = new Koa();
+
+app.use(ctx => {
+  ctx.body = 'Hello Koa';
+});
+
+app.listen(4000);
+```
+
+### The front-end
+
+As Next.js is still our favorite.
+
+```zsh
+npx create-next-app@latest
+```
+
+Now add a fetch to our API somewhere so we know we're in contact!
+
+```js
+await fetch("localhost:4000")
+```
+
+<!-- https://github.com/neefrehman/manyworlds -->
+
+
+## 2. Minikube
+
+Install [Minikube](https://minikube.sigs.k8s.io/docs/start/)
 
 ```zsh
 minikube start
 ```
 
-https://k9scli.io/
+
+### Seeing everything in action
+
+Rather than getting too hung up on CLI commands, we'll use the [k9s interface](https://k9scli.io/) to check in on our progress.
 
 ![k9s](https://cdn-icons-png.flaticon.com/128/194/194279.png)
 
@@ -18,21 +87,31 @@ https://k9scli.io/
 k9s
 ```
 
-We gaan een server met front-end installeren op een proxy/loadbalancer server
+### Getting a feel for it
 
-Nginx
+Let's do a small experiment and run a webserver with front-end page.
 
-Naar tab `deployments`
+To switch tabs, use `shift :`.
+
+**Nginx**
+
+Go to k9s tab `deployments`.
+
+First up is creating a deployment:
 
 ```
 kubectl create deployment web --image=nginxdemos/hello
 ```
 
-Naar tab `services`
+Go to k9s tab `services`.
+
+Next we'll use a debug feature called `expose` to see if we can access our deployment.
 
 ```
 kubectl expose deployment web --type=NodePort --port=80
 ```
+
+# wil ik echt expose gebruiken en waarom werkt port-forward van k9s niet?
 
 ### testen 
 
@@ -42,11 +121,12 @@ draait die
 kubectl get service web
 ```
 
-Using minikube
+Using Minikube
 
 ```sh
 minikube service web --url
 ```
+
 
 ### ingress
 
@@ -87,7 +167,7 @@ EOF
 minkube tunnel # opent alle ingresses voor ons
 ```
 
-### een eigen Docker image maken en draaien
+### 3. een eigen Docker image maken en draaien
 
 add docker
 https://github.com/RubenWerdmuller/docker-workshop
