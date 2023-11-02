@@ -144,7 +144,7 @@ const Koa = require('koa');
 const app = new Koa();
 
 app.use(ctx => {
-  ctx.body = 'Hello Koa';
+  ctx.body = {message: '🐒 Hello world'};
 });
 
 app.listen(4000);
@@ -152,7 +152,7 @@ app.listen(4000);
 
 ### The front-end
 
-As Next.js is still our favorite.
+As `Next.js` is still our favorite!
 
 ```zsh
 npx create-next-app@latest
@@ -161,17 +161,24 @@ npx create-next-app@latest
 Now add a fetch to our API somewhere so we know we're in contact!
 
 ```js
-await fetch("localhost:4000")
+  useEffect(() => {
+    (async () => {
+      const response = await fetch("localhost:4000/");
+
+      if (response.ok) {
+        const configuredCredentials = await response.json();
+        setUserHas2faConfigured(!!configuredCredentials.totp);
+      }
+    })();
+  }, []);
 ```
 
 <!-- https://github.com/neefrehman/manyworlds -->
 
 
-
 ### 3. een eigen Docker image maken en draaien
 
-add docker
-https://github.com/RubenWerdmuller/docker-workshop
+Since there is a separate tutorial about using Docker, [let's visit that one](https://github.com/RubenWerdmuller/docker-workshop#dockerizing-our-own-project) to create our Docker files!
 
 
 https://betterstack.com/community/questions/how-to-use-local-docker-images-with-minikube/
