@@ -7,7 +7,7 @@
 1. We'll kickstart Minikube and test it out a bit
 2. We'll be creating a front-end and API that can talk to each other 🗣⋆.ೃ࿔*
 3. We'll containerize the API and see if we can reach the API using Minikube
-4. And last but not least, we'll attempt giving the front-end up in Minikube
+<!-- 4. And last but not least, we'll attempt giving the front-end up in Minikube -->
 
 ## Prerequisites
 
@@ -69,6 +69,14 @@ Now let's use k9s to debug and see if it's running.
 
 Open the demo up in your [browser](localhost:3000)!
 
+### Expose the app
+
+Open the service tab
+
+```zsh
+kubectl expose deployment web --type=NodePort --port=80
+```
+
 ### Ingress
 
 <!-- Volg de ingress setup voor minikube
@@ -107,8 +115,15 @@ spec:
 EOF
 ```
 
+Add it to your OS hosts list, so we can see it in the browser:
+
 ```zsh
 sudo -- sh -c 'echo "127.0.0.1  hello-world.info" >> /etc/hosts'
+```
+
+HODOR for our OS! 🚪
+
+```zsh
 minikube tunnel # opens up all ingresses to our OS
 ```
 
@@ -174,12 +189,13 @@ Now add a fetch to our API somewhere so we know we're in contact!
 ```
 
 
-### 3. een eigen Docker image maken en draaien
+## 3. een eigen Docker image maken en draaien
+
+We're going to containerize our API 🐵
 
 Since there is a separate tutorial about using Docker, [let's visit that one](https://github.com/RubenWerdmuller/docker-workshop#dockerizing-our-own-project) to create our Docker files!
 
-<!-- https://betterstack.com/community/questions/how-to-use-local-docker-images-with-minikube/ -->
-
+### de applicatie in Minikube
 
 ```
 minikube image load my-image
@@ -196,10 +212,80 @@ docker build -t foo:0.0.1 .
 ```
 -->
 
-Run in Minikube
+This time, we're going to create a `yaml` file for our deployment 🥂
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workshop-api
+  labels:
+    app: web
+spec:
+  selector:
+    matchLabels:
+      app: web
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: web
+    spec:
+      containers:
+        - name: workshop-api
+          image: workshop-api
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 4000
+```
+
+Now apply it to our mini 🚗
 
 ```
-# kubectl create deployment workshop --image=workshop:latest --image-pull-policy=Never
+kubectl apply -f deployment.yaml
 ```
 
-kubectl expose pod workshop --type=NodePort --port=3000
+The next steps are quite similar as before 🪜
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: workshop-api
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - host: workshop-api.info
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: workshop-api
+                port:
+                  number: 4000
+```
+
+Create a service
+
+```zsh
+kubectl expose deployment workshop-api --type=NodePort --port=3000
+```
+
+Test it with this command I plugged without looking from the k8s docs
+
+```zsh
+url --resolve "workshop-test.info:4000:$( minikube ip )" -i http://workshop-test.info
+```
+
+And finally add it to your OS host and tunnel away.
+
+The next step would be to locally run your front-end and see if you can get it to connect to your minikube hosted API.
+
+Cheers!
+
+![heart](https://cdn4.vectorstock.com/i/1000x1000/20/38/hand-making-small-heart-sign-vector-28932038.jpg)
