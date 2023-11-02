@@ -1,16 +1,8 @@
-Presentatie:
-
-- fireship k8s https://www.youtube.com/watch?v=PziYflu8cB8
-- fireship docker https://www.youtube.com/watch?v=Gjnup-PuquQ
-- kort resume over de presentatie
-  - CaC Config as Code
-    - yaml bestanden
-  - k8s is self healing
-- Kubernetes is VET moeilijk, maar hey. Ik heb een crash-crash-crash-course bedacht die je er mee kan laten werken, zonder dat je ALLES hoeft te begrijpen en je kan hiermee voortaan kleine stukjes kennis gaan toevoegen.
-
 ![k8s](https://kubernetes.io/images/kubernetes-horizontal-color.png)
 
 # What will we be doing?
+
+[Watch a video!](https://www.youtube.com/watch?v=PziYflu8cB8) 🍿🍿
 
 1. We'll kickstart Minikube and test it out a bit
 2. We'll be creating a front-end and API that can talk to each other 🗣⋆.ೃ࿔*
@@ -21,13 +13,13 @@ Presentatie:
 
 To run everything we'll want:
 
-- Docker Desktop
-- An account with DockerHub
-- Minikube
-- kubectl CLI
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [DockerHub account](https://hub.docker.com/signup)
+- [Minikube](https://minikube.sigs.k8s.io/docs/start/)
+- [kubectl CLI](https://kubernetes.io/docs/tasks/tools/)
 - VSC
 
-Useful snippets:
+Useful snippet:
 
 ```zsh
 git remote set-url origin git@github.com:your-repo.git
@@ -83,7 +75,7 @@ Open the demo up in your [browser](localhost:3000)!
 https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
 -->
 
-Alright! Now generally you'll want to use Ingresses (loadbalancers/proxies) to act as gateway between a client and our Kubernetes. Let's spin these suckers up.
+Alright! Now generally you'll want to use Ingresses (loadbalancers/proxies) to act as gateway between a client and our Kubernetes. Let's spin a sucker up.
 
 ```zsh
 minikube addons enable ingress
@@ -116,12 +108,14 @@ EOF
 ```
 
 ```zsh
+sudo -- sh -c 'echo "127.0.0.1  hello-world.info" >> /etc/hosts'
 minikube tunnel # opens up all ingresses to our OS
 ```
 
+Now you should be able to reach the server through your browser!
+
 
 ## 2. Front-end and API
-
 
 ### The API
 
@@ -150,6 +144,12 @@ app.use(ctx => {
 app.listen(4000);
 ```
 
+Oh, and finally, add something to run the whole!
+
+```zsh
+"start": "node index.js"
+```
+
 ### The front-end
 
 As `Next.js` is still our favorite!
@@ -166,27 +166,26 @@ Now add a fetch to our API somewhere so we know we're in contact!
       const response = await fetch("localhost:4000/");
 
       if (response.ok) {
-        const configuredCredentials = await response.json();
-        setUserHas2faConfigured(!!configuredCredentials.totp);
+        const body = await response.json();
+        console.log(body);
       }
     })();
   }, []);
 ```
-
-<!-- https://github.com/neefrehman/manyworlds -->
 
 
 ### 3. een eigen Docker image maken en draaien
 
 Since there is a separate tutorial about using Docker, [let's visit that one](https://github.com/RubenWerdmuller/docker-workshop#dockerizing-our-own-project) to create our Docker files!
 
+<!-- https://betterstack.com/community/questions/how-to-use-local-docker-images-with-minikube/ -->
 
-https://betterstack.com/community/questions/how-to-use-local-docker-images-with-minikube/
 
 ```
 minikube image load my-image
 ```
 
+<!--
 ```zsh
 # Set docker env
 eval $(minikube docker-env)             # Unix shells
@@ -195,8 +194,12 @@ minikube docker-env | Invoke-Expression # PowerShell
 # Build image
 docker build -t foo:0.0.1 .
 ```
+-->
+
+Run in Minikube
 
 ```
-# Run in Minikube
-kubectl run hello-foo --image=foo:0.0.1 --image-pull-policy=Never
+# kubectl create deployment workshop --image=workshop:latest --image-pull-policy=Never
 ```
+
+kubectl expose pod workshop --type=NodePort --port=3000
