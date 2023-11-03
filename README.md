@@ -93,7 +93,7 @@ minikube addons enable ingress-dns
 We'll add our first custom kubernetes configuration!
 
 ```sh
-cat <<EOF | kubectl apply -f 
+cat <<EOF | kubectl apply -f -
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -146,11 +146,14 @@ k8s-workshop/
 ```zsh
 npm init
 npm i koa
+npm i @koa/cors
 ```
 
 ```js
 const Koa = require('koa');
 const app = new Koa();
+
+app.use(cors());
 
 app.use(ctx => {
   ctx.body = {message: '🐒 Hello world'};
@@ -173,7 +176,7 @@ As `Next.js` is still our favorite!
 npx create-next-app@latest
 ```
 
-Now add a fetch to our API somewhere so we know we're in contact!
+Now add a fetch to our API somewhere so we know we're in contact! Make sure you use a different port to start your front-end.
 
 ```js
   useEffect(() => {
@@ -191,7 +194,7 @@ Now add a fetch to our API somewhere so we know we're in contact!
 
 ## 3. een eigen Docker image maken en draaien
 
-We're going to containerize our API 🐵
+We're going to containerize our **API** 🐵
 
 Since there is a separate tutorial about using Docker, [let's visit that one](https://github.com/RubenWerdmuller/docker-workshop#dockerizing-our-own-project) to create our Docker files!
 
@@ -273,10 +276,10 @@ spec:
 Create a service
 
 ```zsh
-kubectl expose deployment workshop-api --type=NodePort --port=3000
+kubectl expose deployment workshop-api --type=NodePort --port=4000
 ```
 
-Test it with this command I plugged without looking from the k8s docs
+Test it with this command I plugged without looking from the k8s docs:
 
 ```zsh
 url --resolve "workshop-test.info:4000:$( minikube ip )" -i http://workshop-test.info
