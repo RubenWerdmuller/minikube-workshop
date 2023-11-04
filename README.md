@@ -2,95 +2,91 @@
 
 # What will we be doing?
 
-[Watch a video!](https://www.youtube.com/watch?v=PziYflu8cB8) 🍿🍿
+[Watch the workshop video!](https://www.youtube.com/watch?v=PziYflu8cB8) 🍿🍿
 
-1. We'll kickstart Minikube and test it out a bit
-2. We'll be creating a front-end and API that can talk to each other 🗣⋆.ೃ࿔*
-3. We'll containerize the API and see if we can reach the API using Minikube
-<!-- 4. And last but not least, we'll attempt giving the front-end up in Minikube -->
+In this workshop, we will walk you through the process of setting up a Kubernetes environment and creating a front-end and API that communicate with each other. We will containerize the API and demonstrate how to access it using Minikube.
 
 ## Prerequisites
 
-To run everything we'll want:
+Before getting started, make sure you have the following prerequisites installed:
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - [DockerHub account](https://hub.docker.com/signup)
 - [Minikube](https://minikube.sigs.k8s.io/docs/start/)
 - [kubectl CLI](https://kubernetes.io/docs/tasks/tools/)
-- VSC
+- [k9s interface](https://k9scli.io/)
+- Visual Studio Code (VSC)
 
-Useful snippet:
+![k9s](https://cdn-icons-png.flaticon.com/128/194/194279.png)
+
+Additionally, you can use the following command to set the remote origin of your Git repository:
 
 ```zsh
 git remote set-url origin git@github.com:your-repo.git
 ```
 
-## 1. Minikube
+## Part 1: Setting up Minikube
 
-Install [Minikube](https://minikube.sigs.k8s.io/docs/start/)
+### Install Minikube
+
+Begin by installing Minikube by following the instructions [here](https://minikube.sigs.k8s.io/docs/start/). After installation, start Minikube with the following command:
 
 ```zsh
 minikube start
 ```
 
-> your kubectl CLI can be used to indicate what kubernetes context (read: environment) you are working with. After starting `minikube`, it will set the context for you automatically.
+> Your kubectl CLI will automatically set the Kubernetes context, indicating the environment you are working with.
 
-### Seeing everything in action
+### Visualizing with k9s
 
-Rather than getting too hung up on CLI commands, we'll use the [k9s interface](https://k9scli.io/) to check in on our progress.
-
-![k9s](https://cdn-icons-png.flaticon.com/128/194/194279.png)
+Instead of relying solely on CLI commands, we will use the k9s interface to monitor our progress. Run k9s using the following command:
 
 ```zsh
 k9s
 ```
 
-### Getting a feel for it
+### Experimenting with Deployments
 
-Let's do a small experiment and run a webserver with front-end page.
+Let's start by creating a deployment using an Nginx image from Docker Hub:
 
-> To switch tabs in k9s, use `shift :` and type out your tab, for example, `pods`.
-
-Go to k9s tab `deployments`.
+> In the k9s interface, you can easily switch between different tabs to view various aspects of your Kubernetes environment. To do this, press `Shift` + `:` and then type the name of the tab you want to switch to. In this case we'll be switching to `deployments`
 
 First up is creating a deployment using a [Nginx image](https://hub.docker.com/r/nginxdemos/hello):
 
-> If no Docker registry (read: place where you get your Docker images) from is mentioned in the kubectl CLI command, Docker Hub is automatically used as registry. That's why we can instantly call `nginxdemos/hello` as image
+> When using the `kubectl CLI` to create a deployment, it's important to note that if you don't specify a Docker registry (i.e., the place where Docker images are hosted), Docker Hub is automatically used as the default registry. This is why we can directly reference the `nginxdemos/hello` image without mentioning a specific registry.
 
-```
+```zsh
 kubectl create deployment web --image=nginxdemos/hello
 ```
 
 Now let's use k9s to debug and see if it's running.
 
-- Go to the tab `pods`
-- Port-forward our application using `shift-f`
-- The Nginx demo is using port 80, but we can't forward that. We can however set port 80 for the container port and something we want to use for our `localhost`.
+To see if it's running, use k9s:
 
-Open the demo up in your [browser](localhost:3000)!
+- Go to the pods tab.
+- Port-forward our application using shift-f.
+- Set port 80 for the container and a port of your choice for localhost.
 
-### Expose the app
+Now, open the demo in your [browser](localhost:3000)!
 
-Open the service tab
+### Exposing the app
+
+Open the service tab using:
 
 ```zsh
 kubectl expose deployment web --type=NodePort --port=80
 ```
 
-### Ingress
+### Ingress setup
 
-<!-- Volg de ingress setup voor minikube
-https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
--->
-
-Alright! Now generally you'll want to use Ingresses (loadbalancers/proxies) to act as gateway between a client and our Kubernetes. Let's spin a sucker up.
+ypically, you would use Ingresses to act as gateways between clients and your Kubernetes cluster. Let's enable and configure Ingress for Minikube:
 
 ```zsh
 minikube addons enable ingress
 minikube addons enable ingress-dns
 ```
 
-We'll add our first custom kubernetes configuration!
+Add your first custom Kubernetes configuration for Ingress:
 
 ```sh
 cat <<EOF | kubectl apply -f -
@@ -99,7 +95,7 @@ kind: Ingress
 metadata:
   name: example-ingress
   annotations:
-    kubernetes.io/ingress.class: "nginx" # required for ios
+    kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
     - host: hello-world.info
@@ -115,26 +111,26 @@ spec:
 EOF
 ```
 
-Add it to your OS hosts list, so we can see it in the browser:
+To resolve the URL name, add it to your OS address list:
 
 ```zsh
 sudo -- sh -c 'echo "127.0.0.1  hello-world.info" >> /etc/hosts'
 ```
 
-HODOR for our OS! 🚪
+Expose the app to your OS:
 
 ```zsh
-minikube tunnel # opens up all ingresses to our OS
+minikube tunnel
 ```
 
-Now you should be able to reach the server through your browser!
+You should now be able to access the server through your browser.
 
 
-## 2. Front-end and API
+## Part 2. Front-end and API
 
-### The API
+### Creating the API
 
-Create your directories.
+Create the necessary directories:
 
 ```sh
 k8s-workshop/
@@ -142,6 +138,8 @@ k8s-workshop/
 └─ api/
    └─ index.js
 ```
+
+Create the API with the following code:
 
 ```zsh
 npm init
@@ -162,21 +160,21 @@ app.use(ctx => {
 app.listen(4000);
 ```
 
-Oh, and finally, add something to run the whole!
+Add a start script to your package.json:
 
 ```zsh
 "start": "node index.js"
 ```
 
-### The front-end
+### Settiung up the Front-end
 
-As `Next.js` is still our favorite!
+For the front-end, let's use Next.js:
 
 ```zsh
 npx create-next-app@latest
 ```
 
-Now add a fetch to our API somewhere so we know we're in contact! Make sure you use a different port to start your front-end.
+Fetch data from your API by making an HTTP request. Be sure to use a different port for your front-end:
 
 ```js
   useEffect(() => {
@@ -192,13 +190,11 @@ Now add a fetch to our API somewhere so we know we're in contact! Make sure you 
 ```
 
 
-## 3. een eigen Docker image maken en draaien
+## Part 3: Dockerize the API and Deploy to Minikube
 
-We're going to containerize our **API** 🐵
+Now, let's containerize our API using Docker. Follow the [Docker workshop tutorial](https://github.com/RubenWerdmuller/docker-workshop#dockerizing-our-own-project) to create your Docker files.
 
-Since there is a separate tutorial about using Docker, [let's visit that one](https://github.com/RubenWerdmuller/docker-workshop#dockerizing-our-own-project) to create our Docker files!
-
-### de applicatie in Minikube
+Load your Docker image into Minikube:
 
 ```
 minikube image load my-image
@@ -215,7 +211,7 @@ docker build -t foo:0.0.1 .
 ```
 -->
 
-This time, we're going to create a `yaml` file for our deployment 🥂
+Next, create a YAML file for the API deployment:
 
 ```yaml
 apiVersion: apps/v1
@@ -244,13 +240,19 @@ spec:
             - containerPort: 4000
 ```
 
-Now apply it to our mini 🚗
+Apply the deployment to Minikube:
 
 ```
 kubectl apply -f deployment.yaml
 ```
 
-The next steps are quite similar as before 🪜
+Create a service for the API:
+
+```zsh
+kubectl expose deployment workshop-api --type=NodePort --port=4000
+```
+
+Create a `yaml` file:
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -273,22 +275,20 @@ spec:
                   number: 4000
 ```
 
-Create a service
+Apply the Ingress:
 
 ```zsh
-kubectl expose deployment workshop-api --type=NodePort --port=4000
+kubectl apply -f ingress.yaml
 ```
 
-Test it with this command I plugged without looking from the k8s docs:
+Test the API with the following command:
 
 ```zsh
-url --resolve "workshop-test.info:4000:$( minikube ip )" -i http://workshop-test.info
+curl --resolve "workshop-test.info:4000:$(minikube ip)" -i http://workshop-test.info
 ```
 
-And finally add it to your OS host and tunnel away.
+Add the API to your OS hosts and use minikube tunnel to expose it.
 
-The next step would be to locally run your front-end and see if you can get it to connect to your minikube hosted API.
-
-Cheers!
+Now, you should be able to locally run your front-end and connect it to the Minikube-hosted API. Enjoy your Kubernetes journey!
 
 ![heart](https://ih1.redbubble.net/image.1078219052.8316/flat,750x1000,075,f.jpg)
