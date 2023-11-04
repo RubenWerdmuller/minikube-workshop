@@ -94,11 +94,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: example-ingress
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
     - host: hello-world.info
+      ingressClassName: "nginx"
       http:
         paths:
           - path: /
@@ -259,11 +258,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: workshop-api
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
     - host: workshop-api.info
+      ingressClassName: "nginx"
       http:
         paths:
           - path: /
