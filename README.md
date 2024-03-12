@@ -201,10 +201,10 @@ minikube image load my-image
 
 As a workaround for getting local images into minikube you can use:
 
-```shell
-eval $(minikube docker-env) or eval $(minikube podman-env)
-docker build -t my_image . or podman-remote build -t my_image .
-```
+1. Set the environment variables with eval $(minikube docker-env)
+2. Build the image with the Docker daemon of Minikube (e.g., docker build -t my-image .)
+3. Set the image in the pod specification like the build tag (e.g., my-image)
+4. Set the imagePullPolicy to Never, otherwise Kubernetes will try to download the image.
 
 <!--
 ```zsh
