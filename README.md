@@ -199,6 +199,13 @@ Load your Docker image into Minikube:
 minikube image load my-image
 ```
 
+As a workaround for getting local images into minikube you can use:
+
+```shell
+eval $(minikube docker-env) or eval $(minikube podman-env)
+docker build -t my_image . or podman-remote build -t my_image .
+```
+
 <!--
 ```zsh
 # Set docker env
@@ -288,5 +295,3 @@ curl --resolve "workshop-test.info:4000:$(minikube ip)" -i http://workshop-test.
 Add the API to your OS hosts and use minikube tunnel to expose it.
 
 Now, you should be able to locally run your front-end and connect it to the Minikube-hosted API. Enjoy your Kubernetes journey!
-
-![heart](https://ih1.redbubble.net/image.1078219052.8316/flat,750x1000,075,f.jpg)
