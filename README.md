@@ -165,7 +165,7 @@ Add a start script to your package.json:
 "start": "node index.js"
 ```
 
-### Settiung up the Front-end
+### Setting up the Front-end
 
 For the front-end, let's use Next.js:
 
